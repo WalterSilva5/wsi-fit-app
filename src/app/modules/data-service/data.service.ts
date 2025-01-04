@@ -5,6 +5,8 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
+import { selectAuth } from '../../state/auth/auth.selectors';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',
@@ -12,48 +14,64 @@ import { of } from 'rxjs';
 export class DataService {
   public apiUrl = environment.apiUrl;
   REQUEST_TIMEOUT = 3000000;
-  token = ''
+  token = '';
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, public store: Store<any>) {
+    this.store.select(selectAuth).subscribe((auth) => {
+      this.token = auth?.accessToken || '';
+    });
+  }
 
-  public getData<T>(): Promise<T> {
+  public getData<T>(endpoint?: string): Observable<T> {
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     try {
       return this.http
-        .get<any>(this.apiUrl)
-        .pipe(catchError(this.handleError))
-        .toPromise();
+        .get<any>(`${this.apiUrl}/${endpoint}`, { headers })
+        .pipe(catchError(this.handleError));
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  public postData<T>(data: T): Promise<T> {
+  public postData<T>(data: T): Observable<T> {
     try {
       return this.http
-        .post<any>(this.apiUrl, data)
-        .pipe(catchError(this.handleError))
-        .toPromise();
+        .post<any>(this.apiUrl, data, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .pipe(catchError(this.handleError));
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  public updateData<T>(id: string, data: T): Promise<T> {
+  public updateData<T>(id: string, data: T): Observable<T> {
     const url = `${this.apiUrl}/${id}`;
     try {
       return this.http
-        .put<T>(url, data)
-        .pipe(catchError(this.handleError))
-        .toPromise() as Promise<T>;
+        .put<T>(url, data, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .pipe(catchError(this.handleError));
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  public deleteData(id: string): Promise<Object | undefined> {
+  public deleteData(id: string): Observable<Object | undefined> {
     const url = `${this.apiUrl}/${id}`;
     try {
-      return this.http.delete(url).toPromise();
+      return this.http.delete(url, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
     } catch (error) {
       throw this.handleError(error);
     }
@@ -61,7 +79,7 @@ export class DataService {
 
   public handleError(error: any): Observable<never> {
     let errorMessage = 'Erro desconhecido!';
-    if (error.error) {
+    if (error?.error) {
       errorMessage = `Erro: ${(error as any).error.message}`;
     } else {
       errorMessage = `Código do erro: ${error.status}\nMensagem: ${error.message}`;

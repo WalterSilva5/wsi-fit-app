@@ -3,14 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Meta } from '../../types/meta.type';
-
-export interface TableColumn {
-  label: string;
-  key: string;
-  format?: 'date' | 'boolean' | 'currency' | 'datetime';
-  colSpan?: number;
-  className?: string;
-}
+import { TableColumn } from './types/table-column.type';
 
 @Component({
   selector: 'app-wsi-table',
@@ -19,7 +12,7 @@ export interface TableColumn {
   standalone: true,
   imports: [CommonModule, FormsModule],
 })
-export class wsiTableComponent {
+export class WsiTableComponent {
   @Input() data: any[] = [];
   @Input() meta: Meta | undefined;
   @Input() columns: TableColumn[] = [];

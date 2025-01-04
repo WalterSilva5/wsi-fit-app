@@ -6,13 +6,17 @@ import { PaginatedData } from '../../../types/paginated-data.type';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { AuthDto } from '../dto/auth-data.dto';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthApiService extends DataService {
-  constructor(public override http: HttpClient) {
-    super(http);
+  constructor(
+    public override http: HttpClient,
+    public override store: Store<any>
+  ) {
+    super(http, store);
   }
 
   login(authData: AuthDto): Observable<any> {

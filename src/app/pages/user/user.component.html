@@ -1,6 +1,20 @@
 <div class="container px-4">
   <div class="mt-3">
     <h1>User</h1>
+    <app-wsi-table
+    [data]="data.data"
+    [meta]="meta"
+    [columns]="columns"
+    [showPagination]="true"
+    [showFilter]="true"
+    [showActions]="true"
+    [activeActions]="['edit', 'delete']"
+    (rowClick)="handleRowClick($event)"
+    (filterChange)="handleFilterChange($event)"
+    (editClick)="handleEditClick($event)"
+    (deleteClick)="handleDeleteClick($event)"
+    (pageChange)="handlePageChange($event)"
+  />
   </div>
 </div>
 

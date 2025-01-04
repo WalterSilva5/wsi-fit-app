@@ -1,4 +1,3 @@
 export interface PaginationFilters {
-    search: string;
+    search?: string;
   }
-  
