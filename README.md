@@ -29,7 +29,7 @@ O **WSI Angular Front** é uma aplicação frontend desenvolvida em Angular para
 
 ### Backend (Integração)
 - **Prisma ORM**: Gerenciamento do banco de dados MySQL.
-- **Express.js**: Servidor backend.
+- **Nestjs**: Servidor backend.
 - **MySQL**: Banco de dados para armazenamento das informações.
 
 ---
