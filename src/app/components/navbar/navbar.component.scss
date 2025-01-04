@@ -1,0 +1,141 @@
+@import '../../../../src/styles.scss';
+
+.navbar {
+  background-color: #2eb883;
+  min-height: 42px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: inline-flex;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.logo {
+  text-decoration: none;
+}
+
+.button-container {
+  display: flex;
+  align-items: start;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.styled-button {
+  color: #343a40;
+  background-color: #6eebbb;
+  border: none;
+  margin: 0 10px;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 10px 20px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+.styled-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #00a767;
+  display: block;
+}
+
+.styled-button:hover {
+  background-color: #adf7db;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  max-width: 250px;
+  justify-content: flex-end;
+}
+
+.user-info>.user-icon {
+  height: 30px;
+  margin-right: 10px;
+  padding: 0 10px;
+}
+
+.user-info>.username {
+  color: #343a40;
+  margin-right: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #6eebbb;
+  }
+}
+
+.logout-button {
+  height: 30px;
+  margin-right: 10px;
+}
+
+.maintenance-alert {
+  color: #343a40;
+  margin-right: 20px;
+  font-size: 14px;
+  background-color: #ffc107;
+  height: 30px;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  user-select: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-toggle {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #343a40;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #6eebbb;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2eb883;
+    min-width: 160px;
+    box-shadow: none;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+
+    .styled-button {
+      color: #343a40;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #6eebbb;
+      }
+    }
+  }
+
+  &:hover .dropdown-content {
+    display: block;
+  }
+}
