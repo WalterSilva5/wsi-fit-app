@@ -33,6 +33,7 @@
   position: relative;
   transition: background-color 0.3s ease;
   border-radius: 5px;
+  text-align: left;
 }
 
 .styled-button.active::after {
@@ -123,19 +124,27 @@
     .styled-button {
       color: #343a40;
       padding: 10px 20px;
+      background-color: #98dfc3;
       text-decoration: none;
       display: block;
-      background: none;
-      border: none;
       cursor: pointer;
 
       &:hover {
         background-color: #6eebbb;
       }
+      border-radius: 5;
+      border: 1px solid #106444;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
   }
 
   &:hover .dropdown-content {
     display: block;
   }
+}
+
+.logo-text{
+  background-color: orangered;
+  font-weight: bold;
 }

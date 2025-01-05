@@ -1,20 +1,20 @@
 <div class="navbar p-0 m-0" [hidden]="currentRouteIsAuth">
   <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex p-1 px-2 my-1 bg-secondary text-light rounded mx-2">
+    <div class="d-flex p-1 px-2 my-1 text-light rounded mx-2 logo-text">
       <a class="logo text-light" routerLink="/">
-        <h3>WSI FRONTEND</h3>
+        <h3>WSI FIT</h3>
       </a>
     </div>
     <div class="button-container mx-5">
       <button class="styled-button" routerLink="/home">Home</button>
       <div class="dropdown">
-        <button class="styled-button dropdown-toggle">Exemplo Abas</button>
+        <button class="styled-button dropdown-toggle">Administrativo</button>
         <div class="dropdown-content ">
-          <button class="styled-button" routerLink="/sample-1">Exemplo 2</button>
-          <button class="styled-button" routerLink="/sample-2">Exemplo 1</button>
+          <button class="styled-button" routerLink="/user">Usuarios</button>
+          <button class="styled-button" routerLink="/muscle-group">Grupos Musculares</button>
+          <button class="styled-button" routerLink="/exercise">Exercicios</button>
         </div>
       </div>
-      <button class="styled-button" routerLink="/user">Usuarios</button>
     </div>
   </div>
   <div class="user-info">

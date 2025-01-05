@@ -7,6 +7,8 @@ import { Roles } from './state/roles/roles.enum';
 import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './pages/user/user.component';
 import { ComponentsComponent } from './pages/components/components.component';
+import { MuscleGroupComponent } from './pages/admin/muscle-group/muscle-group.component';
+import { ExerciseComponent } from './pages/admin/exercise/exercise.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,6 +16,8 @@ export const routes: Routes = [
   { path: 'auth/login', component: LoginComponent },
   { path: 'user', component: UserComponent },
   { path: 'components', component: ComponentsComponent },
+  { path: 'muscle-group', component: MuscleGroupComponent },
+  { path: 'exercise', component: ExerciseComponent },
 ];
 
 
