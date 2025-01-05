@@ -99,6 +99,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  transition: background-color 0.3s ease;
 
   .dropdown-toggle {
     background-color: transparent;
@@ -109,6 +110,7 @@
     text-decoration: none;
     display: inline-block;
     background-color: #6eebbb;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
   }
 
   .dropdown-content {
@@ -119,6 +121,7 @@
     box-shadow: none;
     padding-bottom: 10px;
     padding-top: 10px;
+    transition: background-color 0.3s ease;
 
 
     .styled-button {
