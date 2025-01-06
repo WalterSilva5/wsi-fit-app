@@ -5,6 +5,7 @@ import { PaginationFilters } from '../../types/pagination-filters.type';
 import { UserDataService } from './data/data.service';
 import PaginatedData from '../../types/paginated-data.type';
 import Meta from '../../types/meta.type';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -24,7 +25,7 @@ export class UserComponent implements OnInit {
   data: PaginatedData<any> = new PaginatedData();
   meta: Meta = new Meta();
 
-  constructor(private api: UserDataService) {}
+  constructor(private api: UserDataService, protected router: Router) {}
   ngOnInit(): void {
     this.fetchData({ search: '' });
   }

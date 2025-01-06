@@ -1,29 +1,29 @@
-<h3>User create</h3>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="firstName">First Name</label>
-    <input id="firstName" formControlName="firstName" type="text">
+<h3 class="text-center mb-4">Cadastrar Usuario</h3>
+<form class="container" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-2">
+    <label class="form-label" for="firstName">Nome</label>
+    <input id="firstName" formControlName="firstName" type="text" class="form-control">
   </div>
-  <div>
-    <label for="lastName">Last Name</label>
-    <input id="lastName" formControlName="lastName" type="text">
+  <div class="mb-2">
+    <label class="form-label" for="lastName">Sobrenome</label>
+    <input id="lastName" formControlName="lastName" type="text" class="form-control">
   </div>
-  <div>
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" type="email">
+  <div class="mb-2">
+    <label class="form-label" for="email">Email</label>
+    <input id="email" formControlName="email" type="email" class="form-control">
   </div>
-  <div>
-    <label for="password">Password</label>
-    <input id="password" formControlName="password" type="password">
+  <div class="mb-2">
+    <label class="form-label" for="password">Password</label>
+    <input id="password" formControlName="password" type="text" class="form-control">
   </div>
-  <div>
-    <label for="role">Role</label>
-    <select id="role" formControlName="role">
+  <div class="mb-2">
+    <label class="form-label" for="role">Perfil</label>
+    <select id="role" formControlName="role" class="form-select">
       <option value="USER">USER</option>
       <option value="INSTRUCTOR">INSTRUCTOR</option>
       <option value="MANAGER">MANAGER</option>
       <option value="ADMIN">ADMIN</option>
     </select>
   </div>
-  <button type="submit">Create</button>
+  <button class="btn btn-primary mt-3" type="submit">Cadastrar</button>
 </form>

@@ -1,6 +1,14 @@
 <div class="container px-4">
   <div class="mt-3">
     <h1>Usuarios</h1>
+    <div>
+      <button
+        class="btn btn-primary"
+        (click)="router.navigate(['user', 'create'])"
+      >
+        adicionar
+      </button>
+    </div>
     <app-wsi-table
     [data]="data.data"
     [meta]="meta"
