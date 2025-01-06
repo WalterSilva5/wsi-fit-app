@@ -1,6 +1,6 @@
 export interface UserModel {
   createdAt: string;
-  deletedAt: string|null;
+  deletedAt: string | null;
   email: string;
   firstName: string;
   id: number;
@@ -25,10 +25,22 @@ export interface AuthState {
   } | null;
   error: string | null;
 }
-export const initialAuthState: AuthState = {
-  isAuthenticated: false,
-  accessToken: '',
-  refreshToken: '',
-  user: null,
-  error: null,
-};
+
+let savedAuth: string | null = null;
+if (typeof window !== 'undefined') {
+  savedAuth = window.localStorage.getItem('auth');
+}
+
+export const initialAuthState: AuthState = savedAuth
+  ? {
+      ...JSON.parse(savedAuth),
+      isAuthenticated: true,
+      error: null,
+    }
+  : {
+      isAuthenticated: false,
+      accessToken: '',
+      refreshToken: '',
+      user: null,
+      error: null,
+    };
