@@ -1,1 +1,29 @@
 <h3>User create</h3>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="firstName">First Name</label>
+    <input id="firstName" formControlName="firstName" type="text">
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input id="lastName" formControlName="lastName" type="text">
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input id="email" formControlName="email" type="email">
+  </div>
+  <div>
+    <label for="password">Password</label>
+    <input id="password" formControlName="password" type="password">
+  </div>
+  <div>
+    <label for="role">Role</label>
+    <select id="role" formControlName="role">
+      <option value="USER">USER</option>
+      <option value="INSTRUCTOR">INSTRUCTOR</option>
+      <option value="MANAGER">MANAGER</option>
+      <option value="ADMIN">ADMIN</option>
+    </select>
+  </div>
+  <button type="submit">Create</button>
+</form>
