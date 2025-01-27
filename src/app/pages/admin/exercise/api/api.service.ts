@@ -16,6 +16,6 @@ export class ExerciseApiService extends DataService {
   }
 
   getMany(fitlers: PaginationFilters): Observable<PaginatedData<any>> {
-    return this.getData<PaginatedData<any>>(`exercise?${fitlers.search}`)
+    return this.getManyData<PaginatedData<any>>(`exercise?${fitlers.search}`)
   }
 }

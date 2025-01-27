@@ -11,11 +11,18 @@ import { Store } from '@ngrx/store';
   providedIn: 'root',
 })
 export class UserApiService extends DataService {
+  endpoint = 'user';
   constructor(public override http: HttpClient, public override store: Store<any>) {
     super(http, store);
+    this.apiUrl
   }
 
   getMany(fitlers: PaginationFilters): Observable<PaginatedData<any>> {
-    return this.getData<PaginatedData<any>>(`user?${fitlers.search}`)
+    return this.getManyData<PaginatedData<any>>(`${this.endpoint}?${fitlers.search}`)
+  }
+
+  create(data: any): Observable<any> {
+    console.log('Creating user: ', data);
+    return this.postData<any>(data, `${this.endpoint}`);
   }
 }

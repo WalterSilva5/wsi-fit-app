@@ -31,7 +31,7 @@ export class UserComponent implements OnInit {
   }
 
   async fetchData(filters: PaginationFilters) {
-    const data = await this.api.fetchData(filters);
+    const data = await this.api.getMany(filters);
     console.log('user paginated: ', data);
     this.data = data;
   }

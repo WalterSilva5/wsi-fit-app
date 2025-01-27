@@ -22,23 +22,39 @@ export class DataService {
     });
   }
 
-  public getData<T>(endpoint?: string): Observable<T> {
+  public getManyData<T>(endpoint?: string): Observable<T> {
+    const url = `${this.apiUrl}/${endpoint}`;
     const headers = {
       Authorization: `Bearer ${this.token}`,
     };
     try {
       return this.http
-        .get<any>(`${this.apiUrl}/${endpoint}`, { headers })
+        .get<any>(`${url}`, { headers })
         .pipe(catchError(this.handleError));
     } catch (error) {
       throw this.handleError(error);
     }
   }
 
-  public postData<T>(data: T): Observable<T> {
+  public getOneData<T>(id: string, endpoint?: string): Observable<T> {
+    const url = `${this.apiUrl}/${endpoint}/${id}`;
+    const headers = {
+      Authorization: `Bearer ${this.token}`,
+    };
     try {
       return this.http
-        .post<any>(this.apiUrl, data, {
+        .get<any>(`${url}`, { headers })
+        .pipe(catchError(this.handleError));
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  public postData<T>(data: T, endpoint?: string,): Observable<T> {
+    const url = `${this.apiUrl}/${endpoint}`;
+    try {
+      return this.http
+        .post<any>(url, data, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -49,8 +65,8 @@ export class DataService {
     }
   }
 
-  public updateData<T>(id: string, data: T): Observable<T> {
-    const url = `${this.apiUrl}/${id}`;
+  public updateData<T>(data: T, id: string, endpoint?: string,): Observable<T> {
+    const url = `${this.apiUrl}/${endpoint}/${id}`;
     try {
       return this.http
         .put<T>(url, data, {
@@ -64,8 +80,8 @@ export class DataService {
     }
   }
 
-  public deleteData(id: string): Observable<Object | undefined> {
-    const url = `${this.apiUrl}/${id}`;
+  public deleteData(id: string, endpoint?: string): Observable<Object | undefined> {
+    const url = `${this.apiUrl}/${endpoint}/${id}`;
     try {
       return this.http.delete(url, {
         headers: {

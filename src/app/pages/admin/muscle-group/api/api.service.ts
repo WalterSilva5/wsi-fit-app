@@ -16,6 +16,6 @@ export class MuscleGroupApiService extends DataService {
   }
 
   getMany(fitlers: PaginationFilters): Observable<PaginatedData<any>> {
-    return this.getData<PaginatedData<any>>(`muscle-group?${fitlers.search}`)
+    return this.getManyData<PaginatedData<any>>(`muscle-group?${fitlers.search}`)
   }
 }
