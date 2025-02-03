@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PaginationFilters } from '../../../types/pagination-filters.type';
 import { UserApiService } from '../api/api.service';
 import { of, throwError, firstValueFrom } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +32,41 @@ export class UserDataService {
         return throwError(err);
       })
     ));
+  }
+
+  async delete(id: string): Promise<any> {
+    console.log('deleting data: ', id);
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+      if (result.isConfirmed) {
+        const response = await firstValueFrom(this.api.delete(id).pipe(
+          timeout(5000),
+          catchError((err) => {
+            console.error('error deleting data: ', err);
+            return throwError(err);
+          })
+        ));
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success').then(() => {
+          location.reload();
+        });
+        return response;
+      } else {
+        Swal.fire('Cancelled', 'Your file is safe :)', 'error');
+        return of(null);
+      }
+    } catch (err) {
+      console.error('error deleting data: ', err);
+      Swal.fire('Error!', 'There was an error deleting the data.', 'error');
+      return throwError(err);
+    }
   }
 }

@@ -46,6 +46,8 @@ export class UserCreateComponent implements OnInit {
             icon: 'success',
             title: 'User created successfully',
             showConfirmButton: true,
+          }).then(() => {
+            this.router.navigate(['/user']);
           });
         })
         .catch((err) => {

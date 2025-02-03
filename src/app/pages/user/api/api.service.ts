@@ -25,4 +25,9 @@ export class UserApiService extends DataService {
     console.log('Creating user: ', data);
     return this.postData<any>(data, `${this.endpoint}`);
   }
+
+  delete(id: string): Observable<any> {
+    console.log('Deleting user: ', id);
+    return this.deleteData(id, `${this.endpoint}`);
+  }
 }

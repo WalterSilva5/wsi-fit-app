@@ -41,7 +41,12 @@ export class UserComponent implements OnInit {
   }
 
   handleDeleteClick(event: any) {
-    console.log('delete', event);
+    this.deleteUser(`${event?.id}`);
+  }
+
+  async deleteUser(id: string) {
+    const deleteResposne = await this.api.delete(id);
+    console.log('deleteResposne', deleteResposne);
   }
 
   handleFilterChange(event: any) {
