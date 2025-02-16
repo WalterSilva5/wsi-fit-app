@@ -37,7 +37,7 @@ export class UserComponent implements OnInit {
   }
 
   handleEditClick(event: any) {
-    console.log('edit', event);
+    this.router.navigate(['/user/update', { id: event?.id }]);
   }
 
   handleDeleteClick(event: any) {

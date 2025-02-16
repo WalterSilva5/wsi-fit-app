@@ -30,4 +30,8 @@ export class UserApiService extends DataService {
     console.log('Deleting user: ', id);
     return this.deleteData(id, `${this.endpoint}`);
   }
+
+  getById(id: string): Observable<any> {
+    return this.getOneData<any>(id, `${this.endpoint}`);
+  }
 }

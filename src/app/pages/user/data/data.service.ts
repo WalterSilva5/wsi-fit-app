@@ -14,24 +14,28 @@ export class UserDataService {
   constructor(private api: UserApiService) {}
 
   async getMany(filters: PaginationFilters): Promise<PaginatedData<any>> {
-    return firstValueFrom(this.api.getMany(filters).pipe(
-      timeout(5000),
-      catchError((err) => {
-        console.error('error fetching data: ', err);
-        return throwError(err);
-      })
-    ));
+    return firstValueFrom(
+      this.api.getMany(filters).pipe(
+        timeout(5000),
+        catchError((err) => {
+          console.error('error fetching data: ', err);
+          return throwError(err);
+        })
+      )
+    );
   }
 
   async create(data: any): Promise<any> {
     console.log('creating data: ', data);
-    return firstValueFrom(this.api.create(data).pipe(
-      timeout(5000),
-      catchError((err) => {
-        console.error('error creating data: ', err);
-        return throwError(err);
-      })
-    ));
+    return firstValueFrom(
+      this.api.create(data).pipe(
+        timeout(5000),
+        catchError((err) => {
+          console.error('error creating data: ', err);
+          return throwError(err);
+        })
+      )
+    );
   }
 
   async delete(id: string): Promise<any> {
@@ -39,25 +43,29 @@ export class UserDataService {
     try {
       const result = await Swal.fire({
         title: 'Are you sure?',
-        text: 'You won\'t be able to revert this!',
+        text: "You won't be able to revert this!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, delete it!',
       });
 
       if (result.isConfirmed) {
-        const response = await firstValueFrom(this.api.delete(id).pipe(
-          timeout(5000),
-          catchError((err) => {
-            console.error('error deleting data: ', err);
-            return throwError(err);
-          })
-        ));
-        Swal.fire('Deleted!', 'Your file has been deleted.', 'success').then(() => {
-          location.reload();
-        });
+        const response = await firstValueFrom(
+          this.api.delete(id).pipe(
+            timeout(5000),
+            catchError((err) => {
+              console.error('error deleting data: ', err);
+              return throwError(err);
+            })
+          )
+        );
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success').then(
+          () => {
+            location.reload();
+          }
+        );
         return response;
       } else {
         Swal.fire('Cancelled', 'Your file is safe :)', 'error');
@@ -68,5 +76,18 @@ export class UserDataService {
       Swal.fire('Error!', 'There was an error deleting the data.', 'error');
       return throwError(err);
     }
+  }
+
+  async getById(id: string): Promise<any> {
+    console.log('fetching data by id: ', id);
+    return firstValueFrom(
+      this.api.getById(id).pipe(
+        timeout(5000),
+        catchError((err) => {
+          console.error('error fetching data by id: ', err);
+          return throwError(err);
+        })
+      )
+    );
   }
 }

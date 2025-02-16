@@ -60,4 +60,10 @@ export class UserCreateComponent implements OnInit {
         });
     }
   }
+
+  getById(id: string) {
+    this.api.getById(id).then((res) => {
+      console.log('User by ID: ', res);
+    });
+  }
 }
