@@ -90,4 +90,17 @@ export class UserDataService {
       )
     );
   }
+
+  async updateUser(id: string, data: any): Promise<any> {
+    console.log('updating user: ', data);
+    return firstValueFrom(
+      this.api.update(id, data).pipe(
+        timeout(5000),
+        catchError((err) => {
+          console.error('error updating user: ', err);
+          return throwError(err);
+        })
+      )
+    );
+  }
 }
