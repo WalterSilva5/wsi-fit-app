@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
 import { selectAuth } from '../../state/auth/auth.selectors';
 import { Store } from '@ngrx/store';
 
@@ -22,107 +20,152 @@ export class DataService {
     });
   }
 
-  public getManyData<T>(endpoint?: string): Observable<T> {
-    const url = `${this.apiUrl}/${endpoint}`;
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    try {
-      return this.http
-        .get<any>(`${url}`, { headers })
-        .pipe(catchError(this.handleError));
-    } catch (error) {
-      throw this.handleError(error);
+  protected getHeaders(authenticated: boolean = true): HttpHeaders {
+    let headers = new HttpHeaders();
+    if (authenticated && this.token) {
+      headers = headers.set('Authorization', `Bearer ${this.token}`);
     }
+    return headers;
   }
 
-  public getOneData<T>(id: string, endpoint?: string): Observable<T> {
-    const url = `${this.apiUrl}/${endpoint}/${id}`;
-    const headers = {
-      Authorization: `Bearer ${this.token}`,
-    };
-    try {
-      return this.http
-        .get<any>(`${url}`, { headers })
-        .pipe(catchError(this.handleError));
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  public getManyData<T>(endpoint?: string, authenticated: boolean = true): Observable<T> {
+    const url = this.buildUrl(endpoint);
+    const headers = this.getHeaders(authenticated);
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error) => this.handleError(error, () => this.getManyData(endpoint, authenticated)))
+    );
   }
 
-  public postData<T>(data: T, endpoint?: string,): Observable<T> {
-    const url = `${this.apiUrl}/${endpoint}`;
-    try {
-      return this.http
-        .post<any>(url, data, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .pipe(catchError(this.handleError));
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  public getOneData<T>(id: string, endpoint?: string, authenticated: boolean = true): Observable<T> {
+    const url = this.buildUrl(endpoint, id);
+    const headers = this.getHeaders(authenticated);
+    return this.http.get<any>(url, { headers }).pipe(
+      catchError((error) => this.handleError(error, () => this.getOneData(id, endpoint, authenticated)))
+    );
   }
 
-  public updateData<T>(data: T, id: string, endpoint?: string,): Observable<T> {
-    const url = `${this.apiUrl}/${endpoint}/${id}`;
-    try {
-      return this.http
-        .put<T>(url, data, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .pipe(catchError(this.handleError));
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  public postData<T>(data: T, endpoint?: string, authenticated: boolean = true): Observable<T> {
+    const url = this.buildUrl(endpoint);
+    const headers = this.getHeaders(authenticated);
+    return this.http.post<any>(url, data, { headers }).pipe(
+      catchError((error) => this.handleError(error, () => this.postData(data, endpoint, authenticated)))
+    );
   }
 
-  public deleteData(id: string, endpoint?: string): Observable<Object | undefined> {
-    const url = `${this.apiUrl}/${endpoint}/${id}`;
-    try {
-      return this.http.delete(url, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      });
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  public updateData<T>(data: T, id: string, endpoint?: string, authenticated: boolean = true): Observable<T> {
+    const url = this.buildUrl(endpoint, id);
+    const headers = this.getHeaders(authenticated);
+    return this.http.put<T>(url, data, { headers }).pipe(
+      catchError((error) => this.handleError(error, () => this.updateData(data, id, endpoint, authenticated)))
+    );
   }
 
-  public handleError(error: any): Observable<never> {
-    let errorMessage = 'Erro desconhecido!';
-    if (error?.error) {
-      errorMessage = `Erro: ${(error as any).error.message}`;
-    } else {
-      errorMessage = `Código do erro: ${error.status}\nMensagem: ${error.message}`;
-    }
-    console.error(errorMessage);
-    console.error(error);
-    return throwError(errorMessage);
+  public deleteData(id: string, endpoint?: string, authenticated: boolean = true): Observable<Object | undefined> {
+    const url = this.buildUrl(endpoint, id);
+    const headers = this.getHeaders(authenticated);
+    return this.http.delete(url, { headers }).pipe(
+      catchError((error) => this.handleError(error, () => this.deleteData(id, endpoint, authenticated)))
+    );
   }
 
-  handleTimeoutError(error: any): Observable<any> {
-    if (error.message === 'Network Error') {
-      return of({
-        success: true,
-        message: 'Upload concluído com sucesso!',
-      });
+  /**
+   * Método para tentar fazer refresh do token. Deve ser sobrescrito nos serviços filhos se necessário.
+   */
+  protected refreshToken(): Observable<boolean> {
+    // Por padrão, retorna erro. Serviços filhos podem sobrescrever.
+    return throwError('Refresh token não implementado.');
+  }
+
+  /**
+   * Tratamento centralizado de erros, incluindo tentativa de refresh em caso de 401.
+   */
+  public handleError(error: any, retryCallback?: () => Observable<any>): Observable<any> {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 401 && retryCallback) {
+        return this.tryRefreshAndRetry(retryCallback);
+      }
+      const errorMessage = this.buildErrorMessage(error);
+      this.logError(errorMessage, error);
+      return throwError(errorMessage);
     }
-    if (
+    return throwError(error);
+  }
+
+  /**
+   * Trata erros de timeout e rede.
+   */
+  public handleTimeoutError(error: any): Observable<any> {
+    if (this.isNetworkError(error)) {
+      return of({ success: true, message: 'Upload concluído com sucesso!' });
+    }
+    if (this.isTimeoutError(error)) {
+      console.warn('Timeout or unknown error ignored');
+      return of({ success: true, message: 'Request completed successfully' });
+    }
+    this.logError('Erro desconhecido de timeout/rede', error);
+    return throwError(error);
+  }
+
+  /**
+   * Monta a URL base para as requisições.
+   */
+  private buildUrl(endpoint?: string, id?: string): string {
+    let url = `${this.apiUrl}`;
+    if (endpoint) url += `/${endpoint}`;
+    if (id) url += `/${id}`;
+    return url;
+  }
+
+  /**
+   * Monta a mensagem de erro amigável.
+   */
+  private buildErrorMessage(error: HttpErrorResponse): string {
+    if (error.error && error.error.message) {
+      return `Erro: ${error.error.message}`;
+    }
+    return `Código do erro: ${error.status}\nMensagem: ${error.message}`;
+  }
+
+  /**
+   * Tenta fazer refresh do token e refazer a requisição original.
+   */
+  private tryRefreshAndRetry(retryCallback: () => Observable<any>): Observable<any> {
+    return this.refreshToken().pipe(
+      switchMap((success) => {
+        if (success) {
+          return retryCallback();
+        } else {
+          return throwError('Não autenticado.');
+        }
+      }),
+      catchError(() => throwError('Erro ao renovar autenticação.'))
+    );
+  }
+
+  /**
+   * Verifica se o erro é de rede.
+   */
+  private isNetworkError(error: any): boolean {
+    return error && error.message === 'Network Error';
+  }
+
+  /**
+   * Verifica se o erro é timeout (504 ou 0).
+   */
+  private isTimeoutError(error: any): boolean {
+    return (
       error instanceof HttpErrorResponse &&
       (error.status === 504 || error.status === 0)
-    ) {
-      console.warn('Timeout or unknown error ignored');
-      return of({
-        success: true,
-        message: 'Request completed successfully',
-      });
+    );
+  }
+
+  /**
+   * Loga o erro no console.
+   */
+  private logError(message: string, error?: any): void {
+    console.error(message);
+    if (error) {
+      console.error(error);
     }
-    console.error('Error occurred:', error);
-    return throwError(error);
   }
 }

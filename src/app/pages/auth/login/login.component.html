@@ -1,10 +1,15 @@
-<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
+<!-- Login Card Centralizado -->
+<div class="login-bg d-flex justify-content-center align-items-center vh-100">
   <form
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
-    class="p-5 col-6 rounded shadow bg-white"
+    class="login-card p-5 col-12 col-md-6 col-lg-4 rounded shadow"
+    autocomplete="off"
   >
-    <h3 class="text-center mb-4 text-primary"><b>WSI Fit</b></h3>
+    <div class="text-center mb-4">
+      <h2 class="login-title"><b>WSI Fit</b></h2>
+      <div class="login-subtitle">Bem-vindo! Faça login para continuar.</div>
+    </div>
 
     <div class="mb-4">
       <label for="email" class="form-label">*Email:</label>
@@ -13,10 +18,9 @@
         id="email"
         formControlName="email"
         class="form-control form-control-lg"
-        autocomplete="off"
-        [class.is-invalid]="
-          form.get('email')?.invalid && form.get('email')?.touched
-        "
+        [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+        placeholder="Digite seu email"
+        aria-label="Email"
       />
       <div
         *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
@@ -29,49 +33,52 @@
       </div>
     </div>
 
-    <div class="input-group mb-4">
-      <input
-        [type]="passwordFieldType"
-        id="password"
-        formControlName="password"
-        autocomplete="off"
-        class="form-control form-control-lg"
-        placeholder="Senha"
-      />
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        (click)="togglePasswordVisibility()"
-      >
-        <img
-          [src]="
-            passwordFieldType === 'password'
-              ? openEyeIconPath
-              : closeEyeIconPath
-          "
-          alt="toggle"
-          class="toggle-icon"
+    <div class="mb-4 position-relative">
+      <label for="password" class="form-label">*Senha:</label>
+      <div class="password-container">
+        <input
+          [type]="passwordFieldType"
+          id="password"
+          formControlName="password"
+          class="form-control form-control-lg pr-5"
+          placeholder="Digite sua senha"
+          aria-label="Senha"
         />
-      </button>
+        <button
+          class="toggle-password"
+          type="button"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="passwordFieldType === 'password' ? 'Mostrar senha' : 'Ocultar senha'"
+        >
+          <img
+            [src]="passwordFieldType === 'password' ? openEyeIconPath : closeEyeIconPath"
+            alt="toggle"
+            class="toggle-icon"
+          />
+        </button>
+      </div>
+      <div
+        *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+        class="invalid-feedback d-block"
+      >
+        <div *ngIf="form.get('password')?.errors?.['required']">
+          Senha é obrigatória.
+        </div>
+        <div *ngIf="form.get('password')?.errors?.['minlength']">
+          A senha deve ter pelo menos 4 caracteres.
+        </div>
+      </div>
     </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <a class="forgot-link" href="#" tabindex="-1">Esqueci minha senha?</a>
+    </div>
+
     <div class="d-flex justify-content-center">
-      <button type="submit" class="btn btn-success btn-lg w-50">Entrar</button>
+      <button type="submit" class="btn btn-moss btn-lg w-100" [disabled]="form.invalid || isLoading">
+        <span *ngIf="!isLoading">Entrar</span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
     </div>
   </form>
 </div>
-
-<style>
-  .bg-light {
-    background-color: #f8f9fa;
-  }
-  .bg-white {
-    background-color: #ffffff;
-  }
-  .text-primary {
-    color: #0d6efd;
-  }
-  .toggle-icon {
-    width: 20px;
-    height: 20px;
-  }
-</style>

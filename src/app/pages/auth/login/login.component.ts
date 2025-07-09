@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   passwordFieldType: string = 'password';
   auth$: Observable<AuthState>;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,8 +56,10 @@ export class LoginComponent implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (this.form.valid) {
+      this.isLoading = true;
       const { email, password } = this.form.value;
       const authResponse = await this.api.login({ email, password });
+      this.isLoading = false;
       if (authResponse?.accessToken) {
         this.store.dispatch(AuthActions.loginSuccess({ auth: authResponse }));
         Swal.fire({
