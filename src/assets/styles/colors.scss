@@ -1,7 +1,6 @@
-
 /*colors*/
-$primary: #007bff;
-$secondary: #6c757d;
+$primary: #1DB954; // verde principal
+$secondary: #6A0DAD; // roxo secundário
 $success: #28a745;
 $danger: #dc3545;
 $warning: #ffc107;
@@ -17,12 +16,12 @@ $d_blue_2: #2D2D8C;
 $d_blue_3: #213F5B;
 $d_blue_4: #102941;
 $d_blue_5: #0D2337;
-$green_1: #33D258;
-$green_2: #178d48;
+$green_1: #1DB954; // verde escuro Spotify
+$green_2: #33D258;
 $white_1: #FFFFFF;
-$grayscale_1: #F5F0F8;
-$grayscale_2: #E1E1E1;
-$grayscale_3: #F8F8F8;
+$grayscale_1: #232323; // cinza escuro para backgrounds
+$grayscale_2: #181818; // cinza ainda mais escuro
+$grayscale_3: #121212; // quase preto
 $grayscale_4: #B9C1C9;
 $grayscale_5: #6A7682;
 $grayscale_6: #7E8B98;
@@ -32,6 +31,10 @@ $yellow_1: #FFA318;
 $orange_1: #FF4500;
 $orange_2: #a14805;
 $red_1: #E64F40;
+$dark-bg: #000000; // fundo preto
+$dark-green: #1DB954; // verde destaque
+$dark-purple: #6A0DAD; // roxo destaque
+$dark-text: #E0E0E0; // texto claro
 
 :root {
   --primary: #{$primary};
@@ -66,6 +69,10 @@ $red_1: #E64F40;
   --orange_1: #{$orange_1};
   --orange_2: #{$orange_2};
   --red_1: #{$red_1};
+  --dark-bg: #{$dark-bg};
+  --dark-green: #{$dark-green};
+  --dark-purple: #{$dark-purple};
+  --dark-text: #{$dark-text};
 }
 
 /*primary*/
