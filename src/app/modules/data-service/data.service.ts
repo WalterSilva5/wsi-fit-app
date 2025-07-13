@@ -5,6 +5,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { selectAuth } from '../../state/auth/auth.selectors';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class DataService {
   REQUEST_TIMEOUT = 3000000;
   token = '';
 
-  constructor(public http: HttpClient, public store: Store<any>) {
+  constructor(public http: HttpClient, public store: Store<any>, private router: Router) {
     this.store.select(selectAuth).subscribe((auth) => {
       this.token = auth?.accessToken || '';
     });
@@ -135,10 +136,14 @@ export class DataService {
         if (success) {
           return retryCallback();
         } else {
+          this.router.navigate(['/auth/login']);
           return throwError('Não autenticado.');
         }
       }),
-      catchError(() => throwError('Erro ao renovar autenticação.'))
+      catchError(() => {
+        this.router.navigate(['/auth/login']);
+        return throwError('Erro ao renovar autenticação.');
+      })
     );
   }
 
